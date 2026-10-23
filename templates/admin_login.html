@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased">
+  <div class="flex min-h-screen items-center justify-center px-4">
+    <div class="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-xl">
+      <div class="mb-8 text-center">
+        <div class="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-teal-700 text-2xl text-white">✚</div>
+        <h1 class="text-2xl font-extrabold text-slate-900">Admin Login</h1>
+        <p class="mt-2 text-sm text-slate-500">Zenova Health Care Centre</p>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="mb-4 rounded-xl px-4 py-3 text-sm {{ 'bg-emerald-50 text-emerald-800' if category == 'success' else 'bg-rose-50 text-rose-800' }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="post" action="{{ url_for('admin_login_post') }}" class="space-y-5">
+        <div>
+          <label for="username" class="mb-2 block text-sm font-semibold text-slate-700">Username</label>
+          <input id="username" name="username" type="text" required class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-100" value="admin">
+        </div>
+        <div>
+          <label for="password" class="mb-2 block text-sm font-semibold text-slate-700">Password</label>
+          <input id="password" name="password" type="password" required class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-100" placeholder="Enter password">
+        </div>
+        <button type="submit" class="w-full rounded-xl bg-teal-700 px-4 py-3 font-bold text-white transition hover:bg-teal-800">Login</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased">
+  <div class="mx-auto flex min-h-screen max-w-md items-center justify-center px-4">
+    <div class="w-full rounded-3xl border border-slate-200 bg-white p-8 shadow-xl">
+      <div class="mb-8 text-center">
+        <p class="text-sm font-bold uppercase tracking-[.2em] text-teal-700">Zenova Admin</p>
+        <h1 class="mt-3 text-3xl font-extrabold text-slate-900">Login</h1>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="mb-5 rounded-xl p-3 text-sm {{ 'bg-emerald-50 text-emerald-800' if category == 'success' else 'bg-rose-50 text-rose-800' }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="post" action="{{ url_for('admin_login_post') }}" class="space-y-5">
+        <div>
+          <label for="username" class="mb-2 block text-sm font-semibold text-slate-700">Username</label>
+          <input id="username" name="username" type="text" value="admin" required class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 outline-none transition focus:border-teal-500 focus:bg-white focus:ring-2 focus:ring-teal-100">
+        </div>
+        <div>
+          <label for="password" class="mb-2 block text-sm font-semibold text-slate-700">Password</label>
+          <input id="password" name="password" type="password" required class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 outline-none transition focus:border-teal-500 focus:bg-white focus:ring-2 focus:ring-teal-100">
+        </div>
+        <button type="submit" class="w-full rounded-xl bg-teal-700 px-4 py-3 font-bold text-white transition hover:bg-teal-800">
+          Sign in
+        </button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

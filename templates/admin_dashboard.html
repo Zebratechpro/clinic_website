@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased">
+  <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div class="mb-8 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[.2em] text-teal-700">Admin Panel</p>
+        <h1 class="mt-2 text-3xl font-extrabold text-slate-900">Appointments</h1>
+      </div>
+      <a href="{{ url_for('admin_logout') }}" class="rounded-xl bg-slate-900 px-4 py-2 font-semibold text-white transition hover:bg-slate-800">Logout</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="mb-6 rounded-xl p-3 text-sm {{ 'bg-emerald-50 text-emerald-800' if category == 'success' else 'bg-rose-50 text-rose-800' }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200 text-left">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-4 py-3 text-sm font-semibold text-slate-700">Name</th>
+              <th class="px-4 py-3 text-sm font-semibold text-slate-700">Phone</th>
+              <th class="px-4 py-3 text-sm font-semibold text-slate-700">Email</th>
+              <th class="px-4 py-3 text-sm font-semibold text-slate-700">Service</th>
+              <th class="px-4 py-3 text-sm font-semibold text-slate-700">Date</th>
+              <th class="px-4 py-3 text-sm font-semibold text-slate-700">Time</th>
+              <th class="px-4 py-3 text-sm font-semibold text-slate-700">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200">
+            {% if appointments %}
+              {% for appointment in appointments %}
+                <tr class="align-top">
+                  <td class="px-4 py-3 text-sm font-semibold text-slate-900">{{ appointment.patient_name }}</td>
+                  <td class="px-4 py-3 text-sm text-slate-600">{{ appointment.phone }}</td>
+                  <td class="px-4 py-3 text-sm text-slate-600">{{ appointment.email or '—' }}</td>
+                  <td class="px-4 py-3 text-sm text-slate-600">{{ appointment.service }}</td>
+                  <td class="px-4 py-3 text-sm text-slate-600">{{ appointment.appointment_date }}</td>
+                  <td class="px-4 py-3 text-sm text-slate-600">{{ appointment.appointment_time }}</td>
+                  <td class="px-4 py-3 text-sm">
+                    <span class="inline-flex rounded-full bg-amber-100 px-2.5 py-1 font-semibold text-amber-800">{{ appointment.status }}</span>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="7" class="px-4 py-10 text-center text-slate-500">No appointments yet.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased">
+  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mb-8 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[.2em] text-teal-700">Dashboard</p>
+        <h1 class="mt-2 text-3xl font-extrabold text-slate-900">Appointments</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="rounded-full bg-teal-50 px-3 py-1 text-sm font-semibold text-teal-700">Signed in as {{ session.get('admin_username', 'admin') }}</span>
+        <a href="{{ url_for('admin_logout') }}" class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-slate-700">Logout</a>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="mb-5 rounded-xl p-4 text-sm {{ 'bg-emerald-50 text-emerald-800' if category == 'success' else 'bg-rose-50 text-rose-800' }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-700">
+            <tr>
+              <th class="px-5 py-3 font-bold">Name</th>
+              <th class="px-5 py-3 font-bold">Phone</th>
+              <th class="px-5 py-3 font-bold">Email</th>
+              <th class="px-5 py-3 font-bold">Service</th>
+              <th class="px-5 py-3 font-bold">Date</th>
+              <th class="px-5 py-3 font-bold">Time</th>
+              <th class="px-5 py-3 font-bold">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if appointments %}
+              {% for appointment in appointments %}
+                <tr class="border-t border-slate-200">
+                  <td class="px-5 py-4 font-medium text-slate-900">{{ appointment['patient_name'] }}</td>
+                  <td class="px-5 py-4 text-slate-700">{{ appointment['phone'] }}</td>
+                  <td class="px-5 py-4 text-slate-700">{{ appointment['email'] or '—' }}</td>
+                  <td class="px-5 py-4 text-slate-700">{{ appointment['service'] }}</td>
+                  <td class="px-5 py-4 text-slate-700">{{ appointment['appointment_date'] }}</td>
+                  <td class="px-5 py-4 text-slate-700">{{ appointment['appointment_time'] }}</td>
+                  <td class="px-5 py-4">
+                    <span class="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-amber-800">{{ appointment['status'] }}</span>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="7" class="px-5 py-10 text-center text-slate-500">No appointment requests yet.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
