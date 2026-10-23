@@ -1,4 +1,26 @@
 (() => {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const revealTargets = document.querySelectorAll(
+    ".section-kicker, .section-title, .service-card, .gallery-card, .review-card"
+  );
+
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    document.documentElement.classList.add("reveal-enabled");
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealTargets.forEach((target) => {
+      target.classList.add("reveal-on-scroll");
+      revealObserver.observe(target);
+    });
+  }
+
   const menuButton = document.getElementById("menu-button");
   const mobileMenu = document.getElementById("mobile-menu");
 
