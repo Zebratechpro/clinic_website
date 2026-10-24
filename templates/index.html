@@ -19,13 +19,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body class="bg-white text-slate-800 antialiased">
   <div class="bg-clinic-900 text-white text-sm">
     <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-1 px-4 py-2 sm:flex-row sm:px-6 lg:px-8">
       <p>Thoughtful care for every stage of life</p>
-      <p>Mon–Sat · 9:00 AM–5:00 PM <span class="mx-2 text-teal-200">|</span> <a href="tel:{{ clinic_phone }}" class="underline-offset-4 hover:underline">{{ clinic_phone }}</a></p>
+      <p>Mon–Sat · 9:00 AM–8:00 PM <span class="mx-2 text-teal-200">|</span> <a href="tel:{{ clinic_phone }}" class="underline-offset-4 hover:underline">{{ clinic_phone }}</a></p>
     </div>
   </div>
 
@@ -35,17 +36,19 @@
         <span class="grid h-11 w-11 place-items-center rounded-2xl bg-clinic-700 text-xl text-white">✚</span>
         <span><span class="block font-display text-lg font-extrabold tracking-tight text-slate-900">Zenova</span><span class="block text-xs font-semibold tracking-[.18em] text-clinic-700">HEALTH CARE CENTRE &amp; CLINIC</span></span>
       </a>
-      <button id="menu-button" class="rounded-xl border border-slate-200 p-2 text-slate-700 md:hidden" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu">
+      <button id="menu-button" class="rounded-xl border border-slate-200 p-2 text-slate-700 lg:hidden" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
-      <div class="hidden items-center gap-8 md:flex">
+      <div class="hidden items-center gap-3 lg:gap-8 lg:flex">
         <a class="nav-link" href="#home">Home</a><a class="nav-link" href="#about">About doctor</a><a class="nav-link" href="#services">Services</a><a class="nav-link" href="#contact">Contact</a>
         <a href="#appointment" class="rounded-full bg-clinic-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-clinic-900">Book an appointment <span aria-hidden="true">↗</span></a>
+        <button id="language-toggle" class="rounded-full border border-clinic-700 px-4 py-2 text-sm font-bold text-clinic-700 transition hover:bg-clinic-50" type="button" aria-label="Switch to Tamil">தமிழ்</button>
       </div>
     </nav>
-    <div id="mobile-menu" class="hidden border-t border-slate-100 bg-white px-4 pb-4 md:hidden">
+    <div id="mobile-menu" class="hidden border-t border-slate-100 bg-white px-4 pb-4 lg:hidden">
       <div class="flex flex-col gap-1 pt-2">
         <a class="mobile-link" href="#home">Home</a><a class="mobile-link" href="#about">About doctor</a><a class="mobile-link" href="#services">Services</a><a class="mobile-link" href="#contact">Contact</a><a class="mobile-link font-bold text-clinic-700" href="#appointment">Book an appointment →</a>
+        <button id="language-toggle-mobile" class="mobile-link text-left font-bold text-clinic-700" type="button" aria-label="Switch to Tamil">தமிழ்</button>
       </div>
     </div>
   </header>
@@ -112,16 +115,16 @@
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center"><p class="section-kicker">OUR SERVICES</p><h2 class="section-title mt-3">Focused solutions for better health outcomes</h2><p class="mt-4 leading-7 text-slate-600">From chronic disease management to diagnostics and home-based support, we deliver integrated care that is practical, timely, and patient-centered.</p></div>
         <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <article class="service-card"><span class="service-icon">✚</span><h3>Hypertension management</h3><p>Personalized monitoring and treatment plans for blood pressure control and long-term cardiovascular health.</p></article>
-          <article class="service-card"><span class="service-icon">♡</span><h3>Diabetes management</h3><p>Complete diabetes care including lifestyle counseling, medication support, and ongoing follow-up.</p></article>
-          <article class="service-card"><span class="service-icon">◷</span><h3>Diabetes wound care</h3><p>Focused care for diabetic foot and wound management to promote healing and reduce complications.</p></article>
-          <article class="service-card"><span class="service-icon">☏</span><h3>Thyroid treatment</h3><p>Assessment and treatment plans for thyroid imbalance with regular review and monitoring.</p></article>
-          <article class="service-card"><span class="service-icon">⚕</span><h3>Weight management</h3><p>Structured guidance for sustainable weight reduction and healthy lifestyle improvement.</p></article>
-          <article class="service-card"><span class="service-icon">▣</span><h3>Lab diagnostics</h3><p>Accurate diagnostic support and test-based care planning for timely clinical decisions.</p></article>
-          <article class="service-card"><span class="service-icon">⌂</span><h3>Home visits</h3><p>Arrange an in-home clinical visit when travelling to the clinic is difficult. Contact us to discuss your needs and visit availability.</p></article>
-          <article class="service-card"><span class="service-icon">❤</span><h3>Home care</h3><p>Care planning and follow-up guidance for ongoing health needs, chronic conditions, or recovery—coordinated with the clinic team.</p></article>
-          <article class="service-card"><span class="service-icon">✧</span><h3>Hairfall treatment</h3><p>Assessment and care guidance for hair loss and scalp concerns.</p></article>
-          <article class="service-card"><span class="service-icon">✿</span><h3>Skin care</h3><p>Personalized assessment and treatment guidance for common skin concerns.</p></article>
+          <article class="service-card"><span class="service-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="6" width="25" height="29" rx="4"/><path d="M14 17h13M14 23h5m5 0h3m-13 6h4"/><path d="M33 17h3a5 5 0 0 1 5 5v5a6 6 0 0 1-6 6h-2M18 41h7"/></svg></span><h3>Hypertension management</h3><p>Personalized monitoring and treatment plans for blood pressure control and long-term cardiovascular health.</p></article>
+          <article class="service-card"><span class="service-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="6" width="25" height="36" rx="4"/><path d="M15 12h11"/><path d="M20 20s-6 6.2-6 10a6 6 0 0 0 12 0c0-3.8-6-10-6-10Z"/><path d="M17 31h6"/></svg></span><h3>Diabetes management</h3><p>Complete diabetes care including lifestyle counseling, medication support, and ongoing follow-up.</p></article>
+          <article class="service-card"><span class="service-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 8 25 25-8 8L7 16l8-8Z"/><path d="m17 18 4-4m2 10 4-4m2 10 4-4"/><path d="m13 14 4 4m10 10 4 4"/></svg></span><h3>Diabetes wound care</h3><p>Focused care for diabetic foot and wound management to promote healing and reduce complications.</p></article>
+          <article class="service-card"><span class="service-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 18c-3-6-11-7-14-2-4 7 3 14 10 12l5-4m1-6c3-6 11-7 14-2 4 7-3 14-10 12l-5-4"/><path d="M24 18v18m-4-9h8m-8 4h8"/></svg></span><h3>Thyroid treatment</h3><p>Assessment and treatment plans for thyroid imbalance with regular review and monitoring.</p></article>
+          <article class="service-card"><span class="service-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="9" width="34" height="32" rx="6"/><path d="M18 17h12l-3 5h-6l-3-5Z"/><path d="M24 24v5m-5 7h10"/></svg></span><h3>Weight management</h3><p>Structured guidance for sustainable weight reduction and healthy lifestyle improvement.</p></article>
+          <article class="service-card"><span class="service-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 7h12v5l-3 4v5l9 14a4 4 0 0 1-3 6H12a4 4 0 0 1-3-6l9-14v-5l-5-4V7Z"/><path d="M15 31h14M19 36h6"/></svg></span><h3>Lab diagnostics</h3><p>Accurate diagnostic support and test-based care planning for timely clinical decisions.</p></article>
+          <article class="service-card"><span class="service-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 22 19-15 19 15v19H27V29h-7v12H5V22Z"/><path d="M24 14v10m-5-5h10"/></svg></span><h3>Home visits</h3><p>Arrange an in-home clinical visit when travelling to the clinic is difficult. Contact us to discuss your needs and visit availability.</p></article>
+          <article class="service-card"><span class="service-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 40S7 30 7 18a9 9 0 0 1 17-4 9 9 0 0 1 17 4c0 12-17 22-17 22Z"/><path d="M6 31h9l4-7 6 13 4-8h13"/></svg></span><h3>Home care</h3><p>Care planning and follow-up guidance for ongoing health needs, chronic conditions, or recovery—coordinated with the clinic team.</p></article>
+          <article class="service-card"><span class="service-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 40c1-9 2-17 6-24 2-4 4-6 6-6s4 2 6 6c4 7 5 15 6 24"/><path d="M17 25c4 2 10 2 14 0m-13 6c4 2 8 2 12 0"/></svg></span><h3>Hairfall treatment</h3><p>Assessment and care guidance for hair loss and scalp concerns.</p></article>
+          <article class="service-card"><span class="service-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 6c-10 0-17 8-17 19 0 10 6 17 17 17s17-7 17-17C41 14 34 6 24 6Z"/><path d="M17 21h.1M31 21h.1m-13 9c2 2 4 3 6 3s4-1 6-3"/><circle cx="13" cy="28" r="1"/><circle cx="35" cy="28" r="1"/></svg></span><h3>Skin care</h3><p>Personalized assessment and treatment guidance for common skin concerns.</p></article>
         </div>
       </div>
     </section>
@@ -216,7 +219,7 @@
           <p class="section-kicker">YOUR NEXT STEP</p><h2 class="section-title mt-3">Let’s plan your visit.</h2>
           <p class="mt-5 leading-8 text-slate-600">Share your details and preferred time. For home-care support or a home visit, choose the relevant service and briefly tell us what you need so our team can discuss next steps and availability.</p>
           <div class="mt-8 space-y-5">
-            <div class="flex gap-4"><span class="icon-tile shrink-0">◷</span><div><p class="font-bold text-slate-900">Clinic hours</p><p class="mt-1 text-sm text-slate-600">Monday–Saturday, 9:00 AM–5:00 PM</p></div></div>
+            <div class="flex gap-4"><span class="icon-tile shrink-0">◷</span><div><p class="font-bold text-slate-900">Clinic hours</p><p class="mt-1 text-sm text-slate-600">Monday–Saturday, 9:00 AM–8:00 PM</p></div></div>
             <div class="flex gap-4"><span class="icon-tile shrink-0">☏</span><div><p class="font-bold text-slate-900">Need help booking?</p><a href="tel:{{ clinic_phone }}" class="mt-1 block text-sm text-clinic-700 hover:underline">{{ clinic_phone }}</a></div></div>
           </div>
         </div>
@@ -229,12 +232,13 @@
             {% endif %}
           {% endwith %}
           <form action="{{ url_for('book_appointment') }}" method="post" class="space-y-5" id="booking-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="grid gap-5 sm:grid-cols-2">
               <div><label for="patient_name" class="form-label">Your full name *</label><input id="patient_name" name="patient_name" autocomplete="name" required maxlength="100" class="form-input" placeholder="e.g. Priya Kumar"></div>
               <div><label for="phone" class="form-label">Phone number *</label><input id="phone" name="phone" type="tel" autocomplete="tel" required maxlength="20" pattern="[0-9+(). \-]{7,20}" class="form-input" placeholder="+91 99940 44418"></div>
             </div>
             <div><label for="email" class="form-label">Email address (optional)</label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" class="form-input" placeholder="you@example.com"></div>
-            <div><label for="service" class="form-label">Appointment type *</label><select id="service" name="service" required class="form-input"><option value="">Choose a service</option><option>Hypertension management</option><option>Diabetes management</option><option>Diabetes wound care</option><option>Thyroid treatment</option><option>Weight management</option><option>Lab diagnostics</option><option>Home visits</option><option>Home care</option><option>Hairfall treatment</option><option>Skin care</option><option>General Consultation</option><option>Home Check-up</option><option>Follow-up Visit</option><option>Preventive Care</option><option>Other</option></select></div>
+            <div><label for="service" class="form-label">Appointment type *</label><select id="service" name="service" required class="form-input"><option value="">Choose a service</option><option value="Hypertension management">Hypertension management</option><option value="Diabetes management">Diabetes management</option><option value="Diabetes wound care">Diabetes wound care</option><option value="Thyroid treatment">Thyroid treatment</option><option value="Weight management">Weight management</option><option value="Lab diagnostics">Lab diagnostics</option><option value="Home visits">Home visits</option><option value="Home care">Home care</option><option value="Hairfall treatment">Hairfall treatment</option><option value="Skin care">Skin care</option><option value="General Consultation">General Consultation</option><option value="Home Check-up">Home Check-up</option><option value="Follow-up Visit">Follow-up Visit</option><option value="Preventive Care">Preventive Care</option><option value="Other">Other</option></select></div>
             <div class="grid gap-5 sm:grid-cols-2">
               <div><label for="appointment_date" class="form-label">Preferred date *</label><input id="appointment_date" name="appointment_date" type="date" min="{{ today }}" required class="form-input"></div>
               <div><label for="appointment_time" class="form-label">Preferred time *</label><select id="appointment_time" name="appointment_time" required class="form-input"><option value="">Choose a time</option><option value="09:00">9:00 AM</option><option value="09:30">9:30 AM</option><option value="10:00">10:00 AM</option><option value="10:30">10:30 AM</option><option value="11:00">11:00 AM</option><option value="11:30">11:30 AM</option><option value="14:00">2:00 PM</option><option value="14:30">2:30 PM</option><option value="15:00">3:00 PM</option><option value="15:30">3:30 PM</option><option value="16:00">4:00 PM</option><option value="16:30">4:30 PM</option></select></div>
@@ -259,8 +263,8 @@
             </div>
             <a href="https://wa.me/919994044418?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20an%20appointment." target="_blank" rel="noopener noreferrer" class="mt-9 inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 font-bold text-clinic-900 transition hover:bg-teal-50"><span class="text-xl">☏</span> Chat on WhatsApp</a>
           </div>
-          <div class="overflow-hidden rounded-[1.75rem] bg-white/10 p-3">
-            <iframe src="https://maps.google.com/maps?q=242%2F5i1%2C%20MRN%20Nagar%2C%20Durgam%20Road%2C%20Kallakurichi%20606202&t=&z=15&ie=UTF8&iwloc=&output=embed" title="Map showing the clinic location" class="h-full min-h-[320px] w-full rounded-2xl border-0 sm:min-h-[400px]" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <div class="flex overflow-hidden rounded-[1.75rem] bg-white/10 p-3">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3906.4021440524416!2d78.9693758!3d11.736694100000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bab67534cc53c97%3A0xd4c4b8b7a7742012!2sZenova%20Health%20Care%20Centre%20and%20Clinic!5e0!3m2!1sen!2sin!4v1792828339524!5m2!1sen!2sin" class="block min-h-[450px] w-full flex-1 rounded-2xl border-0 sm:min-h-[520px] lg:min-h-0" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="Zenova Health Care Centre and Clinic location"></iframe>
           </div>
         </div>
       </div>
@@ -269,14 +273,15 @@
 
   <footer class="bg-slate-950 py-7 text-slate-400">
     <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-      <p>© <span id="year"></span> Evergreen Family Clinic. All rights reserved.</p>
-      <div class="flex flex-wrap gap-5"><a href="#home" class="hover:text-white">Back to top ↑</a><a href="#contact" class="hover:text-white">Contact</a><a href="#appointment" class="hover:text-white">Appointments</a></div>
+      <p>© <span id="year"></span> Zenova Health Care Centre &amp; Clinic. All rights reserved.</p>
+      <div class="flex flex-wrap gap-5"><a href="#home" class="hover:text-white">Back to top ↑</a><a href="#contact" class="hover:text-white">Contact</a><a href="#appointment" class="hover:text-white">Appointments</a><a href="https://www.instagram.com/zenova_hcc?mdxt=cmRtODdxaGVvZXJ6" target="_blank" rel="noopener noreferrer" class="hover:text-white" aria-label="Follow Zenova Health Care Centre on Instagram">Instagram</a></div>
     </div>
   </footer>
 
   <a href="https://wa.me/919994044418?text=Hello%2C%20I%20would%20like%20to%20contact%20the%20clinic." target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact the clinic on WhatsApp" title="Chat on WhatsApp">
     <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16.04 3C8.87 3 3.04 8.82 3.04 15.99c0 2.29.6 4.53 1.74 6.51L3 29l6.67-1.75a13 13 0 0 0 6.36 1.62h.01c7.17 0 13-5.83 13-13S23.21 3 16.04 3Zm0 23.65h-.01a10.7 10.7 0 0 1-5.45-1.49l-.39-.23-3.96 1.04 1.06-3.86-.25-.4a10.66 10.66 0 1 1 9 4.94Zm5.86-8c-.32-.16-1.9-.94-2.19-1.05-.3-.11-.51-.16-.73.16-.21.32-.83 1.05-1.02 1.27-.19.21-.38.24-.7.08-.32-.16-1.35-.5-2.57-1.6-.95-.84-1.6-1.88-1.79-2.2-.19-.32-.02-.49.14-.65.14-.14.32-.38.48-.57.16-.19.21-.32.32-.54.11-.21.05-.4-.03-.56-.08-.16-.73-1.76-1-2.41-.26-.63-.53-.55-.73-.56h-.62c-.22 0-.57.08-.86.4-.3.32-1.13 1.1-1.13 2.68s1.16 3.1 1.32 3.31c.16.21 2.28 3.48 5.52 4.88.77.33 1.37.53 1.84.68.77.24 1.47.21 2.02.13.62-.09 1.9-.78 2.17-1.54.27-.75.27-1.4.19-1.54-.08-.14-.29-.22-.62-.38Z"/></svg>
   </a>
+  <script src="{{ url_for('static', filename='js/i18n.js') }}" defer></script>
   <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 </body>
 </html>

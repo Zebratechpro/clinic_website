@@ -26,9 +26,10 @@
       {% endwith %}
 
       <form method="post" action="{{ url_for('admin_login_post') }}" class="space-y-5">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div>
           <label for="username" class="mb-2 block text-sm font-semibold text-slate-700">Username</label>
-          <input id="username" name="username" type="text" required class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-100" value="admin">
+          <input id="username" name="username" type="text" required class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-100">
         </div>
         <div>
           <label for="password" class="mb-2 block text-sm font-semibold text-slate-700">Password</label>
@@ -67,9 +68,10 @@
       {% endwith %}
 
       <form method="post" action="{{ url_for('admin_login_post') }}" class="space-y-5">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div>
           <label for="username" class="mb-2 block text-sm font-semibold text-slate-700">Username</label>
-          <input id="username" name="username" type="text" value="admin" required class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 outline-none transition focus:border-teal-500 focus:bg-white focus:ring-2 focus:ring-teal-100">
+          <input id="username" name="username" type="text" required class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 outline-none transition focus:border-teal-500 focus:bg-white focus:ring-2 focus:ring-teal-100">
         </div>
         <div>
           <label for="password" class="mb-2 block text-sm font-semibold text-slate-700">Password</label>

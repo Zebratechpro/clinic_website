@@ -2,35 +2,88 @@ import os
 import re
 import smtplib
 import sqlite3
+from contextlib import contextmanager
 from datetime import date, datetime
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from functools import wraps
 from pathlib import Path
+from urllib.parse import urlencode
 
 from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask_wtf.csrf import CSRFError, CSRFProtect
 from dotenv import load_dotenv
 
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = Path(os.getenv("DATABASE_PATH", BASE_DIR / "clinic.db"))
+APP_ENV = os.getenv("APP_ENV", "production").strip().lower()
+SECRET_KEY = os.getenv("SECRET_KEY", "").strip()
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "").strip()
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "")
+
+if APP_ENV not in {"development", "production"}:
+    raise ValueError("APP_ENV must be either 'development' or 'production'.")
+if len(SECRET_KEY) < 32:
+    raise ValueError("SECRET_KEY must be configured with at least 32 characters.")
+if not ADMIN_USERNAME or not ADMIN_PASSWORD:
+    raise ValueError("ADMIN_USERNAME and ADMIN_PASSWORD must be configured.")
+if APP_ENV == "production":
+    if SECRET_KEY.lower().startswith(("replace-", "change-", "dev-")):
+        raise ValueError("Set SECRET_KEY to a unique, randomly generated production secret.")
+    if ADMIN_USERNAME.lower() in {"admin", "change_me", "replace_me"} or any(
+        marker in ADMIN_USERNAME.lower() for marker in ("replace", "change")
+    ):
+        raise ValueError("Set ADMIN_USERNAME to a unique production username.")
+    if len(ADMIN_PASSWORD) < 16 or ADMIN_PASSWORD.lower() in {"admin123", "password"} or any(
+        marker in ADMIN_PASSWORD.lower() for marker in ("replace", "change")
+    ):
+        raise ValueError("ADMIN_PASSWORD must be a unique production password of at least 16 characters.")
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-only-change-this-key")
-
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
+app.config.update(
+    SECRET_KEY=SECRET_KEY,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=APP_ENV == "production",
+)
+csrf = CSRFProtect(app)
 MAIL_TO = os.getenv("MAIL_TO", "zenovahcc@gmail.com")
 MAIL_FROM = os.getenv("MAIL_FROM", MAIL_TO)
 MAIL_HOST = os.getenv("MAIL_HOST", "smtp.gmail.com")
 MAIL_PORT = int(os.getenv("MAIL_PORT", "587"))
 MAIL_USERNAME = os.getenv("MAIL_USERNAME", MAIL_TO)
-MAIL_APP_PASSWORD = os.getenv("MAIL_APP_PASSWORD", "zxytoxukicfkvsoq")
+MAIL_APP_PASSWORD = os.getenv("MAIL_APP_PASSWORD", "").strip()
+CLINIC_ADDRESS = os.getenv(
+    "CLINIC_ADDRESS",
+    "242/5i1, MRN Nagar, Durgam Road, Kallakurichi - 606202",
+)
 
 
+@app.after_request
+def add_security_headers(response):
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    if APP_ENV == "production":
+        response.headers.setdefault("Strict-Transport-Security", "max-age=31536000")
+    return response
+
+
+@app.errorhandler(CSRFError)
+def handle_csrf_error(error):
+    return "Form validation failed. Reload the page and try again.", 400
+
+
+@contextmanager
 def get_db():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
-    return conn
+    try:
+        with conn:
+            yield conn
+    finally:
+        conn.close()
 
 
 def init_db():
@@ -87,11 +140,76 @@ Message: {message}
     try:
         with smtplib.SMTP(MAIL_HOST, MAIL_PORT) as smtp:
             smtp.starttls()
-            smtp.login(MAIL_USERNAME, "zxytoxukicfkvsoq")
+            smtp.login(MAIL_USERNAME, MAIL_APP_PASSWORD)
             smtp.sendmail(MAIL_FROM, [MAIL_TO], message.as_string())
         return True
     except Exception:
         app.logger.exception("Failed to send appointment email")
+        return False
+
+
+def send_patient_appointment_email(appointment):
+    if not appointment["email"]:
+        return False
+    if not MAIL_APP_PASSWORD:
+        app.logger.warning("MAIL_APP_PASSWORD is not configured; skipping patient confirmation email.")
+        return False
+
+    appointment_date = datetime.strptime(
+        appointment["appointment_date"], "%Y-%m-%d"
+    ).strftime("%A, %B %d, %Y")
+    appointment_time = datetime.strptime(
+        appointment["appointment_time"], "%H:%M"
+    ).strftime("%I:%M %p").lstrip("0")
+    location_url = "https://www.google.com/maps/search/?" + urlencode({
+        "api": "1",
+        "query": f"Zenova Health Care Centre & Clinic, {CLINIC_ADDRESS}",
+    })
+    email_message = MIMEMultipart("alternative")
+    email_message["Subject"] = "We received your appointment request | Zenova"
+    email_message["From"] = MAIL_FROM
+    email_message["To"] = appointment["email"]
+
+    text_body = f"""\
+Hello {appointment['patient_name']},
+
+Thank you for contacting Zenova Health Care Centre & Clinic. We have received your appointment request.
+
+REQUEST DETAILS
+Service: {appointment['service']}
+Preferred date: {appointment_date}
+Preferred time: {appointment_time}
+
+This is a request receipt, not a confirmed appointment. Our clinic team will contact you to confirm availability.
+
+Need help? Call {os.getenv('CLINIC_PHONE', '+91 9994044418')} or email {os.getenv('CLINIC_EMAIL', 'zenovahcc@gmail.com')}.
+
+Zenova Health Care Centre & Clinic
+{CLINIC_ADDRESS}
+View clinic location: {location_url}
+"""
+    html_body = render_template(
+        "emails/appointment_confirmation.html",
+        patient_name=appointment["patient_name"],
+        service=appointment["service"],
+        appointment_date=appointment_date,
+        appointment_time=appointment_time,
+        clinic_phone=os.getenv("CLINIC_PHONE", "+91 9994044418"),
+        clinic_email=os.getenv("CLINIC_EMAIL", "zenovahcc@gmail.com"),
+        clinic_address=CLINIC_ADDRESS,
+        location_url=location_url,
+    )
+    email_message.attach(MIMEText(text_body, "plain", "utf-8"))
+    email_message.attach(MIMEText(html_body, "html", "utf-8"))
+
+    try:
+        with smtplib.SMTP(MAIL_HOST, MAIL_PORT) as smtp:
+            smtp.starttls()
+            smtp.login(MAIL_USERNAME, MAIL_APP_PASSWORD)
+            smtp.sendmail(MAIL_FROM, [appointment["email"]], email_message.as_string())
+        return True
+    except Exception:
+        app.logger.exception("Failed to send patient appointment confirmation email")
         return False
 
 
@@ -196,6 +314,7 @@ def book_appointment():
             appointment["id"] = cursor.lastrowid
 
         send_appointment_email(appointment)
+        send_patient_appointment_email(appointment)
         flash("Your appointment request has been received. The clinic will contact you to confirm.", "success")
     except sqlite3.IntegrityError:
         flash("That time slot has just been requested. Please choose another time.", "error")
@@ -239,7 +358,7 @@ def admin_login_post():
     return redirect(url_for("admin_login"))
 
 
-@app.get("/admin/logout")
+@app.post("/admin/logout")
 def admin_logout():
     session.clear()
     flash("You have been logged out.", "success")
@@ -254,4 +373,5 @@ def health():
 init_db()
 
 if __name__ == "__main__":
-    app.run(debug=os.getenv("FLASK_DEBUG", "false").lower() == "true")
+    debug_enabled = APP_ENV == "development" and os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    app.run(debug=debug_enabled)
