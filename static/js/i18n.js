@@ -13,7 +13,8 @@
     "Book an appointment": "முன்பதிவு செய்ய",
     "Comprehensive care for everyday wellness": "தினசரி நலனுக்கான முழுமையான மருத்துவப் பராமரிப்பு",
     "Zenova Health Care Centre & Clinic": "ஜெனோவா மருத்துவ மையம் மற்றும் கிளினிக்",
-    "Clinic-based care, home visits, and personalized home-care support for ongoing health needs, including hypertension, diabetes, thyroid care, wound management, and diagnostics.": "உயர் இரத்த அழுத்தம், நீரிழிவு, தைராய்டு சிகிச்சை, காயப் பராமரிப்பு மற்றும் பரிசோதனைகள் உள்ளிட்ட தொடர்ச்சியான உடல்நலத் தேவைகளுக்கு கிளினிக் சிகிச்சை, வீட்டு வருகை மற்றும் தனிப்பட்ட வீட்டு மருத்துவப் பராமரிப்பு வழங்கப்படுகிறது.",
+    "Zenova Health Care Centre & Clinic in Kallakurichi": "கள்ளக்குறிச்சியில் ஜெனோவா மருத்துவ மையம் மற்றும் கிளினிக்",
+    "Looking for a clinic or home care in Kallakurichi? We provide clinic consultations, home visits, and ongoing support for blood pressure, diabetes, thyroid care, wound management, and diagnostics.": "கள்ளக்குறிச்சியில் கிளினிக் அல்லது வீட்டு மருத்துவப் பராமரிப்பு தேடுகிறீர்களா? இரத்த அழுத்தம், நீரிழிவு, தைராய்டு, காயப் பராமரிப்பு மற்றும் பரிசோதனைகளுக்கு கிளினிக் ஆலோசனை, வீட்டு வருகை மற்றும் தொடர் மருத்துவ உதவி வழங்குகிறோம்.",
     "Meet the clinic": "கிளினிக்கைப் பாருங்கள்",
     "Hypertension management": "உயர் இரத்த அழுத்த மேலாண்மை",
     "Diabetes care": "நீரிழிவு பராமரிப்பு",
@@ -166,12 +167,22 @@
     const description = document.querySelector('meta[name="description"]');
     if (description) {
       description.content = language === "ta"
-        ? "ஜெனோவா மருத்துவ மையம்: கிளினிக் முன்பதிவு, வீட்டு வருகை மற்றும் தனிப்பட்ட வீட்டு மருத்துவப் பராமரிப்பு."
-        : "Zenova Health Care Centre offers clinic appointments, home visits, and personalized home-care planning for ongoing health needs.";
+        ? "கள்ளக்குறிச்சியில் ஜெனோவா மருத்துவ மையம்: கிளினிக் ஆலோசனை, வீட்டு வருகை மற்றும் வீட்டு மருத்துவப் பராமரிப்பு."
+        : "Zenova Health Care Centre & Clinic in Kallakurichi, Tamil Nadu. Clinic consultations, home visits, home care, diabetes and blood pressure management, thyroid treatment, and lab diagnostics.";
     }
     document.title = language === "ta"
-      ? "ஜெனோவா மருத்துவ மையம் மற்றும் கிளினிக்"
-      : "Zenova Health Care Centre & Clinic";
+      ? "கள்ளக்குறிச்சி கிளினிக் & வீட்டு மருத்துவப் பராமரிப்பு | ஜெனோவா"
+      : "Zenova Health Care Centre & Clinic | Clinic & Home Care in Kallakurichi";
+    const socialTitle = document.querySelector('meta[property="og:title"]');
+    if (socialTitle) {
+      socialTitle.content = document.title;
+    }
+    const socialDescription = document.querySelector('meta[property="og:description"]');
+    if (socialDescription) {
+      socialDescription.content = language === "ta"
+        ? "கள்ளக்குறிச்சியில் கிளினிக் ஆலோசனை, வீட்டு வருகை, வீட்டு மருத்துவப் பராமரிப்பு மற்றும் பரிசோதனைகள்."
+        : "Clinic consultations, home visits, home care, chronic disease management, and diagnostics in Kallakurichi, Tamil Nadu.";
+    }
 
     document.querySelectorAll("#language-toggle, #language-toggle-mobile").forEach((button) => {
       button.textContent = language === "ta" ? "English" : "தமிழ்";

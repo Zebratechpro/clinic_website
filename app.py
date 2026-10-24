@@ -8,9 +8,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from functools import wraps
 from pathlib import Path
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
+from xml.sax.saxutils import escape
 
-from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask import Flask, Response, flash, redirect, render_template, request, session, url_for
 from flask_wtf.csrf import CSRFError, CSRFProtect
 from dotenv import load_dotenv
 
@@ -58,6 +59,78 @@ CLINIC_ADDRESS = os.getenv(
     "CLINIC_ADDRESS",
     "242/5i1, MRN Nagar, Durgam Road, Kallakurichi - 606202",
 )
+SITE_URL = os.getenv("SITE_URL", "").strip().rstrip("/")
+if SITE_URL:
+    parsed_site_url = urlsplit(SITE_URL)
+    if (
+        parsed_site_url.scheme not in {"http", "https"}
+        or not parsed_site_url.netloc
+        or parsed_site_url.path not in {"", "/"}
+        or parsed_site_url.username
+        or parsed_site_url.password
+        or parsed_site_url.query
+        or parsed_site_url.fragment
+        or (APP_ENV == "production" and parsed_site_url.scheme != "https")
+    ):
+        raise ValueError("SITE_URL must be a valid HTTPS website origin in production.")
+
+CLINIC_MAP_URL = "https://www.google.com/maps/search/?" + urlencode({
+    "api": "1",
+    "query": f"Zenova Health Care Centre & Clinic, {CLINIC_ADDRESS}",
+})
+CLINIC_SCHEMA = {
+    "@context": "https://schema.org",
+    "@type": "MedicalClinic",
+    "name": "Zenova Health Care Centre & Clinic",
+    "description": (
+        "Clinic consultations, home visits, home care, diabetes and blood pressure "
+        "management, thyroid treatment, and lab diagnostics in Kallakurichi, Tamil Nadu."
+    ),
+    "telephone": os.getenv("CLINIC_PHONE", "+91 9994044418"),
+    "email": os.getenv("CLINIC_EMAIL", "zenovahcc@gmail.com"),
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": CLINIC_ADDRESS,
+        "addressLocality": "Kallakurichi",
+        "addressRegion": "Tamil Nadu",
+        "postalCode": "606202",
+        "addressCountry": "IN",
+    },
+    "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 11.7366941,
+        "longitude": 78.9693758,
+    },
+    "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+            "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+        ],
+        "opens": "09:00",
+        "closes": "20:00",
+    }],
+    "availableService": [
+        {"@type": "Service", "name": service}
+        for service in (
+            "Hypertension management",
+            "Diabetes management",
+            "Diabetes wound care",
+            "Thyroid treatment",
+            "Weight management",
+            "Lab diagnostics",
+            "Home visits",
+            "Home care",
+            "Hairfall treatment",
+            "Skin care",
+        )
+    ],
+    "areaServed": {"@type": "City", "name": "Kallakurichi"},
+    "hasMap": CLINIC_MAP_URL,
+    "sameAs": ["https://www.instagram.com/zenova_hcc/"],
+}
+if SITE_URL:
+    CLINIC_SCHEMA["url"] = SITE_URL
+    CLINIC_SCHEMA["image"] = f"{SITE_URL}/static/Images/logo.png"
 
 
 @app.after_request
@@ -233,7 +306,36 @@ def home():
         clinic_email=os.getenv("CLINIC_EMAIL", "hello@exampleclinic.com"),
         clinic_address=os.getenv("CLINIC_ADDRESS", "123 Main Road, Your City, India"),
         map_embed_url=os.getenv("MAP_EMBED_URL", ""),
+        site_url=SITE_URL,
+        clinic_schema=CLINIC_SCHEMA,
     )
+
+
+@app.get("/robots.txt")
+def robots_txt():
+    content = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /admin/login\n"
+    if SITE_URL:
+        content += f"Sitemap: {SITE_URL}/sitemap.xml\n"
+    return Response(content, mimetype="text/plain")
+
+
+@app.get("/sitemap.xml")
+def sitemap_xml():
+    if not SITE_URL:
+        return Response(
+            "Set SITE_URL to your public HTTPS domain to enable the sitemap.\n",
+            status=503,
+            mimetype="text/plain",
+        )
+
+    location = escape(f"{SITE_URL}/")
+    sitemap = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        f"<url><loc>{location}</loc></url>"
+        "</urlset>"
+    )
+    return Response(sitemap, mimetype="application/xml")
 
 
 @app.post("/book-appointment")

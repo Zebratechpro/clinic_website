@@ -4,8 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0f766e">
-  <meta name="description" content="Zenova Health Care Centre offers clinic appointments, home visits, and personalized home-care planning for ongoing health needs.">
-  <title>Zenova Health Care Centre & Clinic</title>
+  <meta name="description" content="Zenova Health Care Centre & Clinic in Kallakurichi, Tamil Nadu. Clinic consultations, home visits, home care, diabetes and blood pressure management, thyroid treatment, and lab diagnostics.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Zenova Health Care Centre &amp; Clinic">
+  <meta property="og:title" content="Zenova Health Care Centre &amp; Clinic | Kallakurichi">
+  <meta property="og:description" content="Clinic consultations, home visits, home care, chronic disease management, and diagnostics in Kallakurichi, Tamil Nadu.">
+  <meta property="og:locale" content="en_IN">
+  <meta name="twitter:card" content="summary">
+  {% if site_url %}
+  <link rel="canonical" href="{{ site_url }}/">
+  <meta property="og:url" content="{{ site_url }}/">
+  <meta property="og:image" content="{{ site_url }}{{ url_for('static', filename='Images/logo.png') }}">
+  {% endif %}
+  <title>Zenova Health Care Centre &amp; Clinic | Clinic &amp; Home Care in Kallakurichi</title>
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='Images/logo.png') }}">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -21,6 +33,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script type="application/ld+json">{{ clinic_schema|tojson }}</script>
 </head>
 <body class="bg-white text-slate-800 antialiased">
   <div class="bg-clinic-900 text-white text-sm">
@@ -33,7 +46,7 @@
   <header class="sticky top-0 z-40 border-b border-slate-100 bg-white/95 backdrop-blur">
     <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8" aria-label="Main navigation">
       <a href="#home" class="flex items-center gap-3" aria-label="Zenova Health Care Centre & Clinic home">
-        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-clinic-700 text-xl text-white">✚</span>
+        <img src="{{ url_for('static', filename='Images/logo.png') }}" alt="" class="h-11 w-11 rounded-2xl object-contain">
         <span><span class="block font-display text-lg font-extrabold tracking-tight text-slate-900">Zenova</span><span class="block text-xs font-semibold tracking-[.18em] text-clinic-700">HEALTH CARE CENTRE &amp; CLINIC</span></span>
       </a>
       <button id="menu-button" class="rounded-xl border border-slate-200 p-2 text-slate-700 lg:hidden" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open navigation menu">
@@ -58,8 +71,8 @@
       <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.05fr_.95fr] lg:px-8 lg:py-24">
         <div class="relative z-10">
           <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-teal-100 bg-white/80 px-4 py-2 text-sm font-semibold text-clinic-900 shadow-sm"><span class="h-2 w-2 rounded-full bg-emerald-500"></span> Comprehensive care for everyday wellness</div>
-          <h1 class="font-display max-w-2xl text-4xl font-extrabold leading-[1.12] tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">Zenova Health Care Centre &amp; Clinic</h1>
-          <p class="mt-6 max-w-xl text-lg leading-8 text-slate-600">Clinic-based care, home visits, and personalized home-care support for ongoing health needs, including hypertension, diabetes, thyroid care, wound management, and diagnostics.</p>
+          <h1 class="font-display max-w-2xl text-4xl font-extrabold leading-[1.12] tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">Zenova Health Care Centre &amp; Clinic in Kallakurichi</h1>
+          <p class="mt-6 max-w-xl text-lg leading-8 text-slate-600">Looking for a clinic or home care in Kallakurichi? We provide clinic consultations, home visits, and ongoing support for blood pressure, diabetes, thyroid care, wound management, and diagnostics.</p>
           <div class="mt-9 flex flex-col gap-3 sm:flex-row">
             <a href="#appointment" class="inline-flex items-center justify-center gap-2 rounded-full bg-clinic-700 px-7 py-4 font-bold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-clinic-900">Book an appointment <span>→</span></a>
             <a href="#about" class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-7 py-4 font-bold text-slate-700 transition hover:border-clinic-600 hover:text-clinic-700">Meet the clinic</a>
