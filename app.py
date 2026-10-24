@@ -1,14 +1,13 @@
+import json
 import os
 import re
-import smtplib
 import sqlite3
 from contextlib import contextmanager
 from datetime import date, datetime
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from functools import wraps
 from pathlib import Path
 from urllib.parse import urlencode, urlsplit
+from urllib.request import Request, urlopen
 from xml.sax.saxutils import escape
 
 from flask import Flask, Response, flash, redirect, render_template, request, session, url_for
@@ -51,10 +50,7 @@ app.config.update(
 csrf = CSRFProtect(app)
 MAIL_TO = os.getenv("MAIL_TO", "zenovahcc@gmail.com")
 MAIL_FROM = os.getenv("MAIL_FROM", MAIL_TO)
-MAIL_HOST = os.getenv("MAIL_HOST", "smtp.gmail.com")
-MAIL_PORT = int(os.getenv("MAIL_PORT", "587"))
-MAIL_USERNAME = os.getenv("MAIL_USERNAME", MAIL_TO)
-MAIL_APP_PASSWORD = os.getenv("MAIL_APP_PASSWORD", "").strip()
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
 CLINIC_ADDRESS = os.getenv(
     "CLINIC_ADDRESS",
     "242/5i1, MRN Nagar, Durgam Road, Kallakurichi - 606202",
@@ -180,8 +176,8 @@ def init_db():
 
 
 def send_appointment_email(appointment):
-    if not MAIL_APP_PASSWORD:
-        app.logger.warning("MAIL_APP_PASSWORD is not configured; skipping appointment email send.")
+    if not RESEND_API_KEY:
+        app.logger.warning("RESEND_API_KEY is not configured; skipping appointment email send.")
         return False
 
     subject = f"New appointment request: {appointment['patient_name']}"
@@ -205,27 +201,48 @@ Message: {message}
         message=appointment["message"] or "No extra notes",
     )
 
-    message = MIMEText(body, "plain", "utf-8")
-    message["Subject"] = subject
-    message["From"] = MAIL_FROM
-    message["To"] = MAIL_TO
-
     try:
-        with smtplib.SMTP(MAIL_HOST, MAIL_PORT) as smtp:
-            smtp.starttls()
-            smtp.login(MAIL_USERNAME, MAIL_APP_PASSWORD)
-            smtp.sendmail(MAIL_FROM, [MAIL_TO], message.as_string())
+        send_email(
+            recipient=MAIL_TO,
+            subject=subject,
+            text=body,
+        )
         return True
     except Exception:
         app.logger.exception("Failed to send appointment email")
         return False
 
 
+def send_email(recipient, subject, text, html=None):
+    payload = {
+        "from": MAIL_FROM,
+        "to": [recipient],
+        "subject": subject,
+        "text": text,
+    }
+    if html:
+        payload["html"] = html
+
+    api_request = Request(
+        "https://api.resend.com/emails",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {RESEND_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    with urlopen(api_request, timeout=20) as response:
+        if not 200 <= response.status < 300:
+            raise RuntimeError(f"Resend API returned HTTP {response.status}.")
+        response.read()
+
+
 def send_patient_appointment_email(appointment):
     if not appointment["email"]:
         return False
-    if not MAIL_APP_PASSWORD:
-        app.logger.warning("MAIL_APP_PASSWORD is not configured; skipping patient confirmation email.")
+    if not RESEND_API_KEY:
+        app.logger.warning("RESEND_API_KEY is not configured; skipping patient confirmation email.")
         return False
 
     appointment_date = datetime.strptime(
@@ -238,11 +255,6 @@ def send_patient_appointment_email(appointment):
         "api": "1",
         "query": f"Zenova Health Care Centre & Clinic, {CLINIC_ADDRESS}",
     })
-    email_message = MIMEMultipart("alternative")
-    email_message["Subject"] = "We received your appointment request | Zenova"
-    email_message["From"] = MAIL_FROM
-    email_message["To"] = appointment["email"]
-
     text_body = f"""\
 Hello {appointment['patient_name']},
 
@@ -272,14 +284,13 @@ View clinic location: {location_url}
         clinic_address=CLINIC_ADDRESS,
         location_url=location_url,
     )
-    email_message.attach(MIMEText(text_body, "plain", "utf-8"))
-    email_message.attach(MIMEText(html_body, "html", "utf-8"))
-
     try:
-        with smtplib.SMTP(MAIL_HOST, MAIL_PORT) as smtp:
-            smtp.starttls()
-            smtp.login(MAIL_USERNAME, MAIL_APP_PASSWORD)
-            smtp.sendmail(MAIL_FROM, [appointment["email"]], email_message.as_string())
+        send_email(
+            recipient=appointment["email"],
+            subject="We received your appointment request | Zenova",
+            text=text_body,
+            html=html_body,
+        )
         return True
     except Exception:
         app.logger.exception("Failed to send patient appointment confirmation email")

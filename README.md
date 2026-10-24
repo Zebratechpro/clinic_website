@@ -59,6 +59,8 @@ gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
 
 Set `APP_ENV=production`, a unique `ADMIN_USERNAME`, an `ADMIN_PASSWORD` of at least 16 characters, and `SITE_URL=https://<your-live-domain>` in Render's environment settings. Render generates `SECRET_KEY` when creating the Blueprint. The service must bind to `0.0.0.0:$PORT`; do not start it with `python app.py` on Render.
 
+Email is sent through Resend's HTTPS API, avoiding SMTP port restrictions on hosting platforms. In Render's environment settings, set `RESEND_API_KEY` to a newly created, rotated Resend API key, and set `MAIL_FROM` to an address on a domain verified in Resend. Set `MAIL_TO` to the clinic inbox. Never put API keys in source code or commit them; keep local secrets only in the ignored `.env`.
+
 **Persistence warning:** Render's default filesystem is ephemeral. The current SQLite database can be lost on redeploy/restart. Use a persistent disk supported by your Render plan and store `DATABASE_PATH` on that disk, or migrate to a managed PostgreSQL database before relying on production appointment records.
 
 ## Customize before publishing
@@ -74,7 +76,7 @@ Set `APP_ENV=production`, a unique `ADMIN_USERNAME`, an `ADMIN_PASSWORD` of at l
 - The form creates a **request**, not a confirmed booking. The clinic must contact the patient to confirm.
 - The current database reserves each date/time slot globally. If the clinic has multiple doctors or multiple appointment capacity per slot, change the uniqueness rule and booking logic accordingly.
 - Run behind a production WSGI server and an HTTPS-enforcing reverse proxy. Production session cookies are Secure, HttpOnly, and SameSite=Lax; HSTS and baseline security headers are set by the app. Keep TLS enabled at the proxy so browsers receive HSTS over HTTPS.
-- Keep production secrets in the server's protected `.env` file, never commit it, and restrict file permissions. Rotate any SMTP app password previously present in the repository and update `MAIL_APP_PASSWORD` in `.env`.
+- Keep production secrets in Render's protected environment settings, never commit them, and rotate any SMTP password or API key that was previously shared or stored in the repository. For local development, keep credentials only in the ignored `.env`.
 - Configure rate limiting for login and appointment submissions at the HTTPS reverse proxy or WAF, and set up protected backups and monitoring before public deployment.
 - Claim and verify the clinic's Google Business Profile, keep its name/address/phone/hours consistent with this site, choose the accurate business category, and request genuine patient reviews. Structured data and on-page SEO help search engines understand the clinic but cannot guarantee a top ranking.
 - Do not collect unnecessary medical information. Restrict database and server-log access, define retention/deletion rules, and comply with applicable privacy and healthcare requirements.

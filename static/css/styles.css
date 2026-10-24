@@ -40,6 +40,7 @@ html[lang="ta"] .section-kicker { letter-spacing:.04em; }
 .form-input::placeholder { color:#94a3b8; }
 .form-input:focus { border-color:#0d9488; box-shadow:0 0 0 3px rgba(13,148,136,.13); }
 .contact-icon { display:grid; width:2.9rem; height:2.9rem; flex-shrink:0; place-items:center; border-radius:1rem; background:rgba(255,255,255,.1); color:#ccfbf1; font-size:1.4rem; }
+.contact-icon svg { width:1.5rem; height:1.5rem; }
 .whatsapp-float { position:fixed; z-index:50; right:max(1.1rem,env(safe-area-inset-right)); bottom:max(1.1rem,env(safe-area-inset-bottom)); display:grid; width:3.65rem; height:3.65rem; place-items:center; border:3px solid white; border-radius:9999px; background:#25d366; color:white; box-shadow:0 8px 28px rgba(0,0,0,.2); transition:transform .2s; }
 .whatsapp-float:hover { transform:translateY(-3px) scale(1.03); }
 .whatsapp-float svg { width:2rem; height:2rem; }
