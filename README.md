@@ -49,6 +49,18 @@ Open http://127.0.0.1:5000
 
 The SQLite database is created automatically on first run. Set `DATABASE_PATH` to choose another location.
 
+### Deploy to Render
+
+The checked-in `render.yaml` configures Render to install dependencies, start the app with Gunicorn bound to Render's `0.0.0.0:$PORT`, and check `/health`. Push the files to GitHub, then create or redeploy the Render web service from the repository. If configuring an existing service manually, set the **Start Command** to:
+
+```bash
+gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+```
+
+Set `APP_ENV=production`, a unique `ADMIN_USERNAME`, an `ADMIN_PASSWORD` of at least 16 characters, and `SITE_URL=https://<your-live-domain>` in Render's environment settings. Render generates `SECRET_KEY` when creating the Blueprint. The service must bind to `0.0.0.0:$PORT`; do not start it with `python app.py` on Render.
+
+**Persistence warning:** Render's default filesystem is ephemeral. The current SQLite database can be lost on redeploy/restart. Use a persistent disk supported by your Render plan and store `DATABASE_PATH` on that disk, or migrate to a managed PostgreSQL database before relying on production appointment records.
+
 ## Customize before publishing
 
 1. Replace **Evergreen Family Clinic**, Dr. `[Doctor Name]`, specialty, qualifications and experience with verified clinic information.
