@@ -111,6 +111,8 @@
     "Please select one of the available time slots.": "கிடைக்கும் நேரங்களில் ஒன்றைத் தேர்ந்தெடுக்கவும்.",
     "Your message must be 1,000 characters or fewer.": "உங்கள் செய்தி 1,000 எழுத்துகளுக்குள் இருக்க வேண்டும்.",
     "Your appointment request has been received. The clinic will contact you to confirm.": "உங்கள் முன்பதிவு கோரிக்கை பெறப்பட்டது. உறுதிப்படுத்த கிளினிக் உங்களைத் தொடர்புகொள்ளும்.",
+    "Appointment request received": "முன்பதிவு கோரிக்கை பெறப்பட்டது",
+    "Close": "மூடு",
     "That time slot has just been requested. Please choose another time.": "அந்த நேரத்திற்கு இப்போது கோரிக்கை வந்துள்ளது. வேறு நேரத்தைத் தேர்ந்தெடுக்கவும்.",
     "We couldn't save your request right now. Please contact the clinic by phone or WhatsApp.": "உங்கள் கோரிக்கையை இப்போது சேமிக்க முடியவில்லை. தொலைபேசி அல்லது WhatsApp மூலம் கிளினிக்கைத் தொடர்புகொள்ளுங்கள்.",
     "CONTACT US": "எங்களைத் தொடர்புகொள்ளுங்கள்",

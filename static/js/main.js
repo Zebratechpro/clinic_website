@@ -42,6 +42,28 @@
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
 
+  const emailPopup = document.getElementById("appointment-email-popup");
+  const closeEmailPopup = document.getElementById("close-appointment-email-popup");
+  if (emailPopup && closeEmailPopup) {
+    const handlePopupKeydown = (event) => {
+      if (event.key === "Escape") dismissEmailPopup();
+    };
+    const dismissEmailPopup = () => {
+      emailPopup.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+      document.removeEventListener("keydown", handlePopupKeydown);
+      document.getElementById("submit-button")?.focus();
+    };
+
+    document.body.classList.add("overflow-hidden");
+    closeEmailPopup.focus();
+    closeEmailPopup.addEventListener("click", dismissEmailPopup);
+    document.addEventListener("keydown", handlePopupKeydown);
+    emailPopup.addEventListener("click", (event) => {
+      if (event.target === emailPopup) dismissEmailPopup();
+    });
+  }
+
   const form = document.getElementById("booking-form");
   const dateInput = document.getElementById("appointment_date");
   if (dateInput) {

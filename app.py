@@ -7,6 +7,7 @@ from datetime import date, datetime
 from functools import wraps
 from pathlib import Path
 from urllib.parse import urlencode, urlsplit
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 from xml.sax.saxutils import escape
 
@@ -229,13 +230,31 @@ def send_email(recipient, subject, text, html=None):
         headers={
             "Authorization": f"Bearer {RESEND_API_KEY}",
             "Content-Type": "application/json",
+            "User-Agent": "ZenovaClinic/1.0",
         },
         method="POST",
     )
-    with urlopen(api_request, timeout=20) as response:
-        if not 200 <= response.status < 300:
-            raise RuntimeError(f"Resend API returned HTTP {response.status}.")
-        response.read()
+    try:
+        with urlopen(api_request, timeout=20) as response:
+            if not 200 <= response.status < 300:
+                raise RuntimeError(f"Resend API returned HTTP {response.status}.")
+            response.read()
+    except HTTPError as error:
+        response_body = error.read().decode("utf-8", errors="replace")
+        try:
+            error_details = json.loads(response_body)
+        except json.JSONDecodeError:
+            error_message = response_body[:500] or "No error details returned."
+        else:
+            error_message = (
+                error_details.get("message")
+                or error_details.get("name")
+                or error_details.get("error")
+                or "No error details returned."
+            )
+        raise RuntimeError(
+            f"Resend API rejected email (HTTP {error.code}): {error_message}"
+        ) from error
 
 
 def send_patient_appointment_email(appointment):
@@ -428,7 +447,7 @@ def book_appointment():
 
         send_appointment_email(appointment)
         send_patient_appointment_email(appointment)
-        flash("Your appointment request has been received. The clinic will contact you to confirm.", "success")
+        flash("Your appointment request has been received. The clinic will contact you to confirm.", "appointment_received")
     except sqlite3.IntegrityError:
         flash("That time slot has just been requested. Please choose another time.", "error")
     except sqlite3.Error:
