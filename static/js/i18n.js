@@ -34,7 +34,7 @@
     "ABOUT THE CLINIC": "கிளினிக்கைப் பற்றி",
     "Compassionate medical care with a personal touch.": "அக்கறையும் தனிப்பட்ட கவனமும் கொண்ட மருத்துவப் பராமரிப்பு.",
     "Zenova Health Care Centre & Clinic provides trusted medical support for chronic condition management and long-term wellness, with home visits and care planning for patients who need support at home.": "நீண்டகால உடல்நலப் பராமரிப்பு மற்றும் நாள்பட்ட நோய் மேலாண்மைக்கான நம்பகமான மருத்துவ உதவியை ஜெனோவா மருத்துவ மையம் வழங்குகிறது. வீட்டில் உதவி தேவைப்படுவோருக்கு வீட்டு வருகை மற்றும் பராமரிப்புத் திட்டங்களும் வழங்கப்படுகின்றன.",
-    "Led by Dr Rahul Anand R M and Dr Radhika E, the clinic focuses on practical treatment, preventive guidance, and patient-centered follow-up care for individuals and families.": "டாக்டர் ராகுல் ஆனந்த் R M மற்றும் டாக்டர் ராதிகா E தலைமையில், நடைமுறை சிகிச்சை, தடுப்பு வழிகாட்டுதல் மற்றும் தனிநபர், குடும்பங்களுக்கான தொடர் பராமரிப்பில் கிளினிக் கவனம் செலுத்துகிறது.",
+    "Led by Dr Rahul Anand R M, MBBS, C.Diab, and Dr Radhika E, MBBS, the clinic focuses on practical treatment, preventive guidance, and patient-centered follow-up care for individuals and families.": "MBBS, C.Diab பட்டம் பெற்ற டாக்டர் ராகுல் ஆனந்த் R M மற்றும் MBBS பட்டம் பெற்ற டாக்டர் ராதிகா E தலைமையில், நடைமுறை சிகிச்சை, தடுப்பு வழிகாட்டுதல் மற்றும் தனிநபர், குடும்பங்களுக்கான தொடர் பராமரிப்பில் கிளினிக் கவனம் செலுத்துகிறது.",
     "Expert-led care": "மருத்துவர் வழிநடத்தும் பராமரிப்பு",
     "Guidance from experienced medical professionals in chronic and preventive care.": "நாள்பட்ட நோய் மற்றும் தடுப்பு மருத்துவத்தில் அனுபவமுள்ள மருத்துவர்களின் வழிகாட்டுதல்.",
     "Home-care support": "வீட்டு மருத்துவப் பராமரிப்பு",
